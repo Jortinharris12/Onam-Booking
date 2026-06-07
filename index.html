@@ -363,6 +363,40 @@ input.invalid{border-color:var(--err)}
 .detail-row .dk{color:var(--text2)}
 .detail-row .dv{font-weight:500;color:var(--text);text-align:right;max-width:65%}
 
+.consent-section {
+  margin-top: 22px;
+  border-top: 1px solid rgba(232,160,32,0.12);
+  padding-top: 18px;
+}
+.consent-heading {
+  font-size: 11px; font-weight: 500; color: var(--text2);
+  letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 14px;
+}
+.consent-label {
+  display: flex; align-items: flex-start; gap: 12px;
+  cursor: pointer; position: relative;
+}
+.consent-label input[type=checkbox] {
+  position: absolute; opacity: 0; width: 0; height: 0;
+}
+.consent-check {
+  flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;
+  border: 1.5px solid var(--gold-border); border-radius: 5px;
+  background: rgba(27,45,20,0.9);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.consent-label input[type=checkbox]:checked ~ .consent-check {
+  background: var(--gold); border-color: var(--gold);
+}
+.consent-label input[type=checkbox]:checked ~ .consent-check::after {
+  content: '✓'; font-size: 12px; font-weight: 700; color: var(--bg);
+}
+.consent-text {
+  font-size: 12.5px; color: var(--text2); line-height: 1.6;
+}
+.consent-text strong { color: var(--text); }
+
 .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:var(--white);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -491,8 +525,7 @@ input.invalid{border-color:var(--err)}
   <div class="progress-bar">
     <div class="prog-step active" id="ps1"><div class="prog-dot">1</div><div class="prog-label">Details</div></div>
     <div class="prog-step" id="ps2"><div class="prog-dot">2</div><div class="prog-label">Tickets</div></div>
-    <div class="prog-step" id="ps3"><div class="prog-dot">3</div><div class="prog-label">Payment</div></div>
-    <div class="prog-step" id="ps4"><div class="prog-dot">✓</div><div class="prog-label">Confirm</div></div>
+    <div class="prog-step" id="ps3"><div class="prog-dot">✓</div><div class="prog-label">Reservation</div></div>
   </div>
 
   <!-- ══ STEP 1 — Personal Details ══ -->
@@ -520,6 +553,28 @@ input.invalid{border-color:var(--err)}
       <label>Phone Number (optional)</label>
       <input type="tel" id="f_phone" placeholder="+49 160 000 0000">
     </div>
+
+    <!-- Data Consent -->
+    <div class="consent-section">
+      <div class="consent-heading">Consent & Data Protection</div>
+      <label class="consent-label">
+        <input type="checkbox" id="consent_data" class="consent-cb">
+        <span class="consent-check"></span>
+        <span class="consent-text">
+          I consent to MDT BW e.V. collecting and storing my personal data (name, email, phone) solely for the purpose of managing my event registration. <strong>Your data will not be shared with third parties or misused in any way.</strong> You may request deletion at any time by contacting us.
+        </span>
+      </label>
+      <div class="err" id="e_consent_data">Please accept the data consent to continue.</div>
+
+      <label class="consent-label" style="margin-top:12px">
+        <input type="checkbox" id="consent_media">
+        <span class="consent-check"></span>
+        <span class="consent-text">
+          I consent to photographs and videos being taken at the event for use in MDT BW e.V.'s community communications, social media, and event documentation. (Optional — unchecking means you prefer not to appear in event media.)
+        </span>
+      </label>
+    </div>
+
     <button class="btn btn-gold" onclick="step1Next()">Continue to Ticket Selection →</button>
   </div>
 
@@ -532,7 +587,7 @@ input.invalid{border-color:var(--err)}
         <div class="tkt-icon">🧑</div>
         <div class="tkt-name">Adult</div>
         <div class="tkt-desc">Age 16 and above</div>
-        <div class="tkt-price">€18 <small>/ person</small></div>
+        <div class="tkt-price">€23 <small>/ person</small></div>
         <div class="qty-row">
           <button class="qty-btn" onclick="changeQty('adult',-1)">−</button>
           <div class="qty-val" id="qty_adult">0</div>
@@ -543,7 +598,7 @@ input.invalid{border-color:var(--err)}
         <div class="tkt-icon">🎓</div>
         <div class="tkt-name">Student</div>
         <div class="tkt-desc">Valid student ID required</div>
-        <div class="tkt-price">€10 <small>/ person</small></div>
+        <div class="tkt-price">€20 <small>/ person</small></div>
         <div class="qty-row">
           <button class="qty-btn" onclick="changeQty('student',-1)">−</button>
           <div class="qty-val" id="qty_student">0</div>
@@ -554,22 +609,11 @@ input.invalid{border-color:var(--err)}
         <div class="tkt-icon">🧒</div>
         <div class="tkt-name">Child</div>
         <div class="tkt-desc">Age 9 and below</div>
-        <div class="tkt-price">€6 <small>/ person</small></div>
+        <div class="tkt-price">€10 <small>/ person</small></div>
         <div class="qty-row">
           <button class="qty-btn" onclick="changeQty('kid',-1)">−</button>
           <div class="qty-val" id="qty_kid">0</div>
           <button class="qty-btn" onclick="changeQty('kid',1)">+</button>
-        </div>
-      </div>
-      <div class="tkt" id="tkt_family">
-        <div class="tkt-icon">👨‍👩‍👧‍👦</div>
-        <div class="tkt-name">Family</div>
-        <div class="tkt-desc">2 Adults + 2 Children</div>
-        <div class="tkt-price">€42 <small>/ bundle</small></div>
-        <div class="qty-row">
-          <button class="qty-btn" onclick="changeQty('family',-1)">−</button>
-          <div class="qty-val" id="qty_family">0</div>
-          <button class="qty-btn" onclick="changeQty('family',1)">+</button>
         </div>
       </div>
     </div>
@@ -578,70 +622,50 @@ input.invalid{border-color:var(--err)}
       <span class="ttl-val" id="total_price">€0.00</span>
     </div>
     <div class="err" id="e_ticket" style="margin-bottom:4px">Please add at least one ticket to continue.</div>
-    <button class="btn btn-gold" onclick="step2Next()">Continue to Payment →</button>
+    <button class="btn btn-gold" onclick="step2Next()">Continue to Reservation →</button>
     <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
   </div>
 
-  <!-- ══ STEP 3 — Payment ══ -->
+  <!-- ══ STEP 3 — Reservation & Confirmation ══ -->
   <div class="step card" id="step3">
-    <div class="card-heading">Payment</div>
-    <div class="card-sub">Bank transfer via Sparkasse — please use the exact reference below.</div>
-    <div class="summary-box" id="pay_summary"></div>
-    <div class="bank-box">
-      <h3>🏦 Sparkasse Bank Details</h3>
-      <div class="bank-row">
-        <span class="bk">Account Holder</span>
-        <span class="bv">Malayalee Deutsches Treffen BW e.V.</span>
-      </div>
-      <div class="bank-row">
-        <span class="bk">IBAN</span>
-        <span style="display:flex;align-items:center;gap:6px">
-          <span class="bv">DE89 3704 0044 0532 0130 00</span>
-          <button class="copy-btn" onclick="copyText('DE89370400440532013000','IBAN')">copy</button>
-        </span>
-      </div>
-      <div class="bank-row">
-        <span class="bk">BIC / SWIFT</span>
-        <span class="bv">SSKMDEMMXXX</span>
-      </div>
-      <div class="bank-row">
-        <span class="bk">Bank</span>
-        <span class="bv">Sparkasse</span>
-      </div>
-      <div class="ref-highlight">
-        <div class="ref-label">Verwendungszweck (Payment Reference) — REQUIRED</div>
-        <div class="ref-value" id="pay_ref">MDTOnam26-001A0S0K0F0</div>
-        <button class="copy-btn" id="copy_ref_btn" onclick="copyRef()" style="margin-top:6px">copy reference</button>
-      </div>
-    </div>
-    <div class="notice">
-      <strong>Important:</strong> Please use the reference code above as your <em>Verwendungszweck</em>. Once your payment is verified by our team, your entry tickets will be sent to your email as a QR code. This usually happens within 1 business day.
-    </div>
-    <button class="btn btn-gold" id="pay_btn" onclick="confirmPayment()">✓ I Have Completed the Transfer</button>
-    <button class="btn btn-ghost" onclick="goStep(2)">← Back to Tickets</button>
-  </div>
-
-  <!-- ══ STEP 4 — Confirmation ══ -->
-  <div class="step card" id="step4">
+    <!-- Reservation confirmed banner -->
     <div class="conf-top">
-      <div class="conf-icon">🎉</div>
-      <h2>Booking Received!</h2>
-      <p>Your registration is complete. Your confirmation has been sent to your email.</p>
+      <div class="conf-icon">🎊</div>
+      <h2>Slot Reserved!</h2>
+      <p>Your slot has been reserved for the next <strong style="color:var(--gold)">24 hours</strong>. Complete your payment within this time to confirm your booking.</p>
     </div>
+
+    <!-- Booking summary -->
+    <div class="summary-box" id="pay_summary"></div>
+
+    <!-- Email notice -->
     <div class="email-ok">
       <span style="font-size:18px">📧</span>
-      <span>Confirmation sent to <strong id="conf_email_display"></strong></span>
+      <span>Payment details have been sent to <strong id="conf_email_display"></strong></span>
     </div>
+
+    <!-- Payment instruction notice -->
+    <div class="notice" style="border-left-color:var(--gold2);background:rgba(232,160,32,0.06);margin-bottom:18px">
+      <strong>⏳ What happens next?</strong><br>
+      Your slot is reserved for <strong>24 hours</strong>. Payment details have been shared with you via email — please complete the bank transfer and use your booking reference as the <em>Verwendungszweck</em>. Once your payment is verified (usually within 1 business day), your entry ticket QR code will be sent to your email.
+    </div>
+
+    <!-- QR code box -->
     <div class="qr-box">
       <h3>Your Booking QR Code</h3>
       <p>Show this at registration. Your entry ticket will arrive by email after payment is verified.</p>
       <div id="qrcode" style="display:inline-block"></div>
       <div class="qr-ref">Reference: <strong id="conf_ref_display"></strong></div>
     </div>
+
+    <!-- Booking details -->
     <div class="detail-list" id="conf_details"></div>
+
+    <!-- Final notice -->
     <div class="notice" style="border-left-color:var(--ok);background:rgba(114,193,145,0.05)">
-      Your QR entry ticket will be emailed once your Sparkasse transfer is verified (within 1 business day). Please bring this QR code — digital or printed — to the registration desk on the day of the event.
+      Your QR entry ticket will be emailed once your payment transfer is verified. Please bring this QR code — digital or printed — to the registration desk on the day of the event.
     </div>
+
     <button class="btn btn-gold" onclick="window.print()">🖨️ Print / Save This Page</button>
   </div>
 
@@ -659,13 +683,12 @@ const EJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
 emailjs.init(EJS_PUBLIC_KEY);
 
 const TICKETS = {
-  adult:   { label:'Adult (16+)',       icon:'🧑', price:18, code:'A' },
-  student: { label:'Student',           icon:'🎓', price:10, code:'S' },
-  kid:     { label:'Child (under 10)',  icon:'🧒', price:6,  code:'K' },
-  family:  { label:'Family (2A + 2C)', icon:'👨‍👩‍👧‍👦', price:42, code:'F' },
+  adult:   { label:'Adult (16+)',       icon:'🧑', price:23, code:'A' },
+  student: { label:'Student',           icon:'🎓', price:20, code:'S' },
+  kid:     { label:'Child (under 10)',  icon:'🧒', price:10,  code:'K' },
 };
 
-const qty = { adult:0, student:0, kid:0, family:0 };
+const qty = { adult:0, student:0, kid:0 };
 const state = { first:'', last:'', email:'', phone:'', ref:'', _grandTotal:0, _ticketLines:[] };
 
 function getNextBookingNum() {
@@ -676,7 +699,7 @@ function getNextBookingNum() {
 
 function buildRef() {
   const n = getNextBookingNum();
-  return `MDTOnam26-${n}A${qty.adult}S${qty.student}K${qty.kid}F${qty.family}`;
+  return `MDTOnam26-${n}A${qty.adult}S${qty.student}K${qty.kid}`;
 }
 
 function changeQty(type, delta) {
@@ -697,7 +720,7 @@ function updateTotals() {
 
 function goStep(n) {
   document.querySelectorAll('.step').forEach((s,i) => s.classList.toggle('active', i+1===n));
-  ['ps1','ps2','ps3','ps4'].forEach((id,i) => {
+  ['ps1','ps2','ps3'].forEach((id,i) => {
     const el = document.getElementById(id);
     el.classList.remove('active','done');
     if (i+1===n) el.classList.add('active');
@@ -710,6 +733,7 @@ function step1Next() {
   const first = document.getElementById('f_first').value.trim();
   const last  = document.getElementById('f_last').value.trim();
   const email = document.getElementById('f_email').value.trim();
+  const consentData = document.getElementById('consent_data').checked;
   let ok = true;
   const setErr = (eid,fid,bad) => {
     document.getElementById(eid).classList.toggle('show',bad);
@@ -719,18 +743,18 @@ function step1Next() {
   setErr('e_first','f_first',!first);
   setErr('e_last', 'f_last', !last);
   setErr('e_email','f_email',!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
+  document.getElementById('e_consent_data').classList.toggle('show', !consentData);
+  if (!consentData) ok = false;
   if (!ok) return;
   state.first = first; state.last = last;
   state.email = email; state.phone = document.getElementById('f_phone').value.trim();
+  state.consentMedia = document.getElementById('consent_media').checked;
   goStep(2);
 }
 
 function step2Next() {
   const totalTickets = Object.values(qty).reduce((a,b)=>a+b,0);
   if (totalTickets===0) { document.getElementById('e_ticket').classList.add('show'); return; }
-
-  const ref = buildRef();
-  state.ref = ref;
 
   let summaryHTML = `
     <div class="summary-row"><span class="sk">Name</span><span class="sv">${state.first} ${state.last}</span></div>
@@ -744,11 +768,10 @@ function step2Next() {
     ticketLines.push(`${TICKETS[k].icon} ${TICKETS[k].label} × ${v} — €${sub.toFixed(2)}`);
   }
   summaryHTML += `<div class="summary-row total"><span class="sk">Total Due</span><span class="sv">€${grandTotal.toFixed(2)}</span></div>`;
-  document.getElementById('pay_summary').innerHTML = summaryHTML;
-  document.getElementById('pay_ref').textContent = ref;
   state._grandTotal = grandTotal;
   state._ticketLines = ticketLines;
-  goStep(3);
+
+  confirmPayment();
 }
 
 function copyText(text, label) {
@@ -778,9 +801,8 @@ function generateQR() {
 }
 
 async function confirmPayment() {
-  const btn = document.getElementById('pay_btn');
-  btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div> Sending confirmation…';
+  const ref = buildRef();
+  state.ref = ref;
 
   const templateParams = {
     to_name:        state.first+' '+state.last,
@@ -809,6 +831,18 @@ async function confirmPayment() {
   document.getElementById('conf_email_display').textContent = state.email;
   document.getElementById('conf_ref_display').textContent   = state.ref;
 
+  // Build and inject booking summary
+  let summaryHTML = `
+    <div class="summary-row"><span class="sk">Name</span><span class="sv">${state.first} ${state.last}</span></div>
+    <div class="summary-row"><span class="sk">Email</span><span class="sv">${state.email}</span></div>`;
+  for (const [k,v] of Object.entries(qty)) {
+    if (!v) continue;
+    const sub = v * TICKETS[k].price;
+    summaryHTML += `<div class="summary-row"><span class="sk">${TICKETS[k].icon} ${TICKETS[k].label} × ${v}</span><span class="sv">€${sub.toFixed(2)}</span></div>`;
+  }
+  summaryHTML += `<div class="summary-row total"><span class="sk">Total Due</span><span class="sv">€${state._grandTotal.toFixed(2)}</span></div>`;
+  document.getElementById('pay_summary').innerHTML = summaryHTML;
+
   let detailsHTML = `
     <div class="detail-row"><span class="dk">Name</span><span class="dv">${state.first} ${state.last}</span></div>
     <div class="detail-row"><span class="dk">Email</span><span class="dv">${state.email}</span></div>`;
@@ -820,10 +854,11 @@ async function confirmPayment() {
     <div class="detail-row"><span class="dk">Total (pending payment)</span><span class="dv">€${state._grandTotal.toFixed(2)}</span></div>
     <div class="detail-row"><span class="dk">Booking Ref</span><span class="dv" style="color:var(--gold);letter-spacing:0.06em">${state.ref}</span></div>
     <div class="detail-row"><span class="dk">Event Date</span><span class="dv">12. September 2026</span></div>
-    <div class="detail-row"><span class="dk">Venue</span><span class="dv">Altes Feuerwehrhaus, Stuttgart</span></div>`;
+    <div class="detail-row"><span class="dk">Venue</span><span class="dv">Altes Feuerwehrhaus, Stuttgart</span></div>
+    <div class="detail-row"><span class="dk">Slot Reserved Until</span><span class="dv" style="color:var(--gold2)">24 hours from now</span></div>`;
   document.getElementById('conf_details').innerHTML = detailsHTML;
 
-  goStep(4);
+  goStep(3);
   generateQR();
 }
 </script>
