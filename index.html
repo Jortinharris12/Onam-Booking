@@ -567,12 +567,13 @@ input.invalid{border-color:var(--err)}
       <div class="err" id="e_consent_data">Please accept the data consent to continue.</div>
 
       <label class="consent-label" style="margin-top:12px">
-        <input type="checkbox" id="consent_media">
+        <input type="checkbox" id="consent_media" class="consent-cb">
         <span class="consent-check"></span>
         <span class="consent-text">
-          I consent to photographs and videos being taken at the event for use in MDT BW e.V.'s community communications, social media, and event documentation. (Optional — unchecking means you prefer not to appear in event media.)
+          I consent to photographs and videos being taken at the event for use in MDT BW e.V.'s community communications, social media, and event documentation. <strong>This consent is required to attend the event.</strong>
         </span>
       </label>
+      <div class="err" id="e_consent_media">Please accept the photo & video consent to continue.</div>
     </div>
 
     <button class="btn btn-gold" onclick="step1Next()">Continue to Ticket Selection →</button>
@@ -734,6 +735,7 @@ function step1Next() {
   const last  = document.getElementById('f_last').value.trim();
   const email = document.getElementById('f_email').value.trim();
   const consentData = document.getElementById('consent_data').checked;
+  const consentMedia = document.getElementById('consent_media').checked;
   let ok = true;
   const setErr = (eid,fid,bad) => {
     document.getElementById(eid).classList.toggle('show',bad);
@@ -744,11 +746,12 @@ function step1Next() {
   setErr('e_last', 'f_last', !last);
   setErr('e_email','f_email',!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
   document.getElementById('e_consent_data').classList.toggle('show', !consentData);
-  if (!consentData) ok = false;
+  document.getElementById('e_consent_media').classList.toggle('show', !consentMedia);
+  if (!consentData || !consentMedia) ok = false;
   if (!ok) return;
   state.first = first; state.last = last;
   state.email = email; state.phone = document.getElementById('f_phone').value.trim();
-  state.consentMedia = document.getElementById('consent_media').checked;
+  state.consentMedia = true;
   goStep(2);
 }
 
